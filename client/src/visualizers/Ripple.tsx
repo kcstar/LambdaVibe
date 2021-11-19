@@ -5,6 +5,9 @@ import * as Tone from 'tone';
 // project imports
 import { Visualizer } from '../Visualizers';
 
+let expansionFactor = 0;
+let isTimeToExpand = false;
+
 export const RippleVisualizer = new Visualizer(
   'Ripple',
   (p5: P5, analyzer: Tone.Analyser) => {
@@ -24,12 +27,36 @@ export const RippleVisualizer = new Visualizer(
       for (let j = 0; j <= 180; j++) {
         const index = Math.floor(p5.map(j, 0, 100, 0, values.length - 1));
         const amplitude = values[index] as number;
-        const r = p5.map(amplitude, -1, 1, 50, 200);
+        const r = p5.map(amplitude, -1, 1, 100 + expansionFactor, 150 + expansionFactor);
         const x = r * Math.sin(j) * i;
         const y = r * Math.cos(j);
         p5.vertex(x, y);
       }
       p5.endShape();
+
+      p5.beginShape();
+      for (let j = 0; j <= 180; j++) {
+        const index = Math.floor(p5.map(j, 0, 100, 0, values.length - 1));
+        const amplitude = values[index] as number;
+        const r = p5.map(amplitude, -1, 1, 50 + expansionFactor, 100 + expansionFactor);
+        const x = r * Math.sin(j) * i;
+        const y = r * Math.cos(j);
+        p5.vertex(x, y);
+      }
+      p5.endShape();
+    }
+
+    if (expansionFactor === 0) {
+      isTimeToExpand = true;
+    }
+    if (expansionFactor === 50) {
+      isTimeToExpand = false;
+    }
+
+    if (isTimeToExpand) {
+      expansionFactor++;
+    } else {
+      expansionFactor--;
     }
   },
 );
