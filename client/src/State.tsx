@@ -5,6 +5,7 @@ import { List, Map } from 'immutable';
 import { PianoInstrument } from './instruments/Piano';
 import { DankPianoInstrument } from './instruments/DankPiano';
 import { WaveformVisualizer } from './visualizers/Waveform';
+import { RippleVisualizer } from './visualizers/Ripple';
 
 /** ------------------------------------------------------------------------ **
  * The entire application state is stored in AppState.
@@ -19,7 +20,7 @@ import { WaveformVisualizer } from './visualizers/Waveform';
 export type AppState = Map<string, any>;
 
 const instruments = List([PianoInstrument, DankPianoInstrument]);
-const visualizers = List([WaveformVisualizer]);
+const visualizers = List([WaveformVisualizer, RippleVisualizer]);
 export const defaultState: AppState = Map<string, any>({
   instruments,
   visualizers,
