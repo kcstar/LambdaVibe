@@ -1,11 +1,11 @@
 // 3rd party library imports
 import * as Tone from 'tone';
-import classNames from 'classnames';
 import { List, Range } from 'immutable';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import flute from '../img/flute.svg';
 // project imports
-import { Instrument } from '../Instruments';
+import { Instrument, InstrumentProps } from '../Instruments';
+import { DispatchAction } from '../Reducer';
 
 /** ------------------------------------------------------------------------ **
  * Contains implementation of components for Piano.
@@ -42,7 +42,7 @@ function FluteButton({ note, octave }: FluteButtonProps): JSX.Element {
   );
 }
 
-function Flute(): JSX.Element {
+function Flute({ synth, setSynth, state, dispatch }: InstrumentProps): JSX.Element {
 
   const [octave, setOctave] = useState(6);
   const keys = List([
@@ -59,6 +59,35 @@ function Flute(): JSX.Element {
     { note: 'Bb', idx: 5.5 },
     { note: 'B', idx: 6 },
   ]);
+  const notes = state.get('notes');
+
+  useEffect(() => {
+    if (notes && sampler) {
+      let eachNote = notes.split(' ');
+      let noteObjs = eachNote.map((note: string, idx: number) => ({
+        idx,
+        time: `+${idx / 4}`,
+        note,
+        velocity: 1,
+      }));
+
+      new Tone.Part((time, value) => {
+        // the value is an object which contains both the note and the velocity
+        sampler.triggerAttackRelease(value.note, '4n', time, value.velocity);
+        if (value.idx === eachNote.length - 1) {
+          dispatch(new DispatchAction('STOP_SONG'));
+        }
+      }, noteObjs).start(0);
+
+      Tone.Transport.start();
+
+      return () => {
+        Tone.Transport.cancel();
+      };
+    }
+
+    return () => {};
+  }, [notes, sampler, dispatch]);
 
   return (
     <div className='pv4'>
