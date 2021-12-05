@@ -55,36 +55,36 @@ export function PianoKey({
 }
 
 // eslint-disable-next-line
-function PianoKeyWithoutJSX({
-  note,
-  synth,
-  minor,
-  index,
-}: PianoKeyProps): JSX.Element {
-  /**
-   * This React component for pedagogical purposes.
-   * See `PianoKey` for the React component with JSX (JavaScript XML).
-   */
-  return React.createElement(
-    'div',
-    {
-      onMouseDown: () => synth?.triggerAttack(`${note}`),
-      onMouseUp: () => synth?.triggerRelease('+0.25'),
-      className: classNames('ba pointer absolute dim', {
-        'bg-black black h3': minor,
-        'black bg-white h4': !minor,
-      }),
-      style: {
-        top: 0,
-        left: `${index * 2}rem`,
-        zIndex: minor ? 1 : 0,
-        width: minor ? '1.5rem' : '2rem',
-        marginLeft: minor ? '0.25rem' : 0,
-      },
-    },
-    [],
-  );
-}
+// function PianoKeyWithoutJSX({
+//   note,
+//   synth,
+//   minor,
+//   index,
+// }: PianoKeyProps): JSX.Element {
+//   /**
+//    * This React component for pedagogical purposes.
+//    * See `PianoKey` for the React component with JSX (JavaScript XML).
+//    */
+//   return React.createElement(
+//     'div',
+//     {
+//       onMouseDown: () => synth?.triggerAttack(`${note}`),
+//       onMouseUp: () => synth?.triggerRelease('+0.25'),
+//       className: classNames('ba pointer absolute dim', {
+//         'bg-black black h3': minor,
+//         'black bg-white h4': !minor,
+//       }),
+//       style: {
+//         top: 0,
+//         left: `${index * 2}rem`,
+//         zIndex: minor ? 1 : 0,
+//         width: minor ? '1.5rem' : '2rem',
+//         marginLeft: minor ? '0.25rem' : 0,
+//       },
+//     },
+//     [],
+//   );
+// }
 
 function PianoType({ title, onClick, active }: any): JSX.Element {
   return (
