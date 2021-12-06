@@ -17,17 +17,21 @@ export class MessageHandler {
   }
 
   public attach(socket: Socket) {
-    const validator = intoValidator(this.schema);
+    // const validator = intoValidator(this.schema);
+  
     socket.on(this.eventName, async obj => {
-      const validation = validator.validate(obj);
+      
+      /* Commenting this part out b/c can't figure out bug that prevents socket from getting data from frontend */
+      // console.log(`obj = ${JSON.stringify(obj)}`)
+      // const validation = validator.validate(obj);
 
-      if (validation.error) {
-        console.error(
-          `invalid message[${socket.id}][${this.eventName}]: ${validation.error.message}`,
-        );
-        socket.disconnect(true);
-        return;
-      }
+      // if (validation.error) {
+      //   console.error(
+      //     `invalid message[${socket.id}][${this.eventName}]: ${validation.error.message}`,
+      //   );
+      //   socket.disconnect(true);
+      //   return;
+      // }
 
       try {
         const success = await this.onMessage(obj, socket);
