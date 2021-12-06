@@ -6,7 +6,7 @@ import { PianoInstrument } from './instruments/Piano';
 import { WaveformVisualizer } from './visualizers/Waveform';
 import { WaveformVisualizer2 } from './visualizers/mhernandez29';
 
-import { XylophoneInstrument } from './instruments/Xylophone'
+import { XylophoneInstrument } from './instruments/mhernandez29'
 
 /** ------------------------------------------------------------------------ **
  * The entire application state is stored in AppState.
