@@ -65,7 +65,7 @@ function Flute(): JSX.Element {
       <div className='fl w-50 pa2'>
         <img src={violin} alt='Violin' />
       </div>
-      <div className='fl w-100 pa2' style={{marginLeft: '2rem'}}> 
+      <div className='fl w-100 pa2' style={{marginLeft: '2rem'}}>
         <label className="f6 b db mb2">
           Current Octave: 
           <select className="input-reset ba b--black-20 pa2 mb2 db w-10"value={octave} onChange={e => setOctave(parseInt(e.target.value))}>
