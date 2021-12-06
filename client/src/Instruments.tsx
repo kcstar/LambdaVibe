@@ -57,37 +57,7 @@ export const InstrumentContainer: React.FC<InstrumentContainerProps> = ({
       oscillator: { type: 'sine' } as Tone.OmniOscillatorOptions,
     }).toDestination(),
   );
-
-  const notes = state.get('notes');
-
-  useEffect(() => {
-    if (notes && synth) {
-      let eachNote = notes.split(' ');
-      let noteObjs = eachNote.map((note: string, idx: number) => ({
-        idx,
-        time: `+${idx / 4}`,
-        note,
-        velocity: 1,
-      }));
-
-      new Tone.Part((time, value) => {
-        // the value is an object which contains both the note and the velocity
-        synth.triggerAttackRelease(value.note, '4n', time, value.velocity);
-        if (value.idx === eachNote.length - 1) {
-          dispatch(new DispatchAction('STOP_SONG'));
-        }
-      }, noteObjs).start(0);
-
-      Tone.Transport.start();
-
-      return () => {
-        Tone.Transport.cancel();
-      };
-    }
-
-    return () => {};
-  }, [notes, synth, dispatch]);
-
+ 
   return (
     <div>
       <TopNav name={instrument.name} />
