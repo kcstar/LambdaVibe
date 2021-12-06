@@ -35,17 +35,28 @@ export const RippleVisualizer = new Visualizer(
       p5.endShape();
     }
 
-    // if (expansionFactor === 0) {
-    //   isTimeToExpand = true;
-    // }
-    // if (expansionFactor === 50) {
-    //   isTimeToExpand = false;
-    // }
+    p5.beginShape();
+    for (let i = 0; i < 360; i++) {
+      const amplitude = values[i] as number;
+      const r = p5.map(amplitude, 0, 1, 100, height);
+      const x = r * p5.cos(i);
+      const y = r * p5.sin(i);
 
-    // if (isTimeToExpand) {
-    //   expansionFactor++;
-    // } else {
-    //   expansionFactor--;
-    // }
+      p5.vertex(x, y);
+    }
+    p5.endShape();
+
+    if (expansionFactor === 0) {
+      isTimeToExpand = true;
+    }
+    if (expansionFactor === 50) {
+      isTimeToExpand = false;
+    }
+
+    if (isTimeToExpand) {
+      expansionFactor++;
+    } else {
+      expansionFactor--;
+    }
   },
 );
