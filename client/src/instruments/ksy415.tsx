@@ -119,4 +119,4 @@ function Flute({ synth, setSynth, state, dispatch }: InstrumentProps): JSX.Eleme
   );
 }
 
-export const FluteInstrument = new Instrument('Flute', Flute);
+export const FluteInstrument = new Instrument('ksy415', Flute);
