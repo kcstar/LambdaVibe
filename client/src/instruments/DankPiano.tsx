@@ -6,14 +6,9 @@ import React, { useState } from 'react';
 import violin from '../img/665px-Violin-with-bow.svg';
 // project imports
 import { Instrument } from '../Instruments';
-
 /** ------------------------------------------------------------------------ **
- * Contains implementation of components for Piano.
+ * Contains implementation of components for Violin.
  ** ------------------------------------------------------------------------ */
-interface FluteButtonProps {
-  note: string;
-  octave: number;
-}
 
 const sampler = new Tone.Sampler({
   urls: {
@@ -30,64 +25,40 @@ const sampler = new Tone.Sampler({
   baseUrl: 'http://localhost:3000/samples/violin/',
 }).toDestination();
 
-function FluteButton({ note, octave }: FluteButtonProps): JSX.Element {
-  return (
-    <div
-      className='f6 link dim br-pill ba bw2 ph3 pv2 mb2 dib black'
-      onClick={() => {
-        sampler.triggerAttackRelease(`${note}${octave}`, '4n');
-      }}>
-      {note}
+function Violin(): JSX.Element {
+  const [currVString, setCurrVString] = useState(1);
+  const vString = {
+    1: ['G', 'Ab', 'A', 'Bb', 'B', 'Cb', 'C', 'Db'],
+    2: ['D', 'Eb', 'E', 'Fb', 'F', 'Gb', 'G', 'Ab'],
+    3: ['A', 'Bb', 'B', 'Cb', 'C', 'Db', 'D', 'Eb'],
+    4: ['E', 'Fb', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb'],
+  }
+
+  function ViolinButton(): JSX.Element {
+    switch (currVString) {
+      case 1:
+        vString[1].map((note) => <a className="f6 link dim br3 ph3 pv2 mb2 dib white bg-purple" href="#0">{note}</a>)
+        break;
+      case 2:
+      case 3:
+      case 4:
+    }
+  }
+
+  return (<div className = 'pp4'><div
+    className='fl w-10 pa2'>
+    <img src={violin} alt='Violin photo'/>
     </div>
-  );
+    <div className='fl w-10 pa2'>
+      <label>
+        Current String: <input value={currVString} onChange={(e) => setCurrVString(parseInt(e.target.value))}/>
+      </label>
+    </div>
+    <div className='relative dib h4 w-100 ml4'>
+      {currVString === 1 ? vString[1].map((note) => <a className="f6 link dim br3 ph3 pv2 mb2 dib white bg-purple" href="#0">{note}</a>) : <div>Hello world</div>}
+    </div>
+    
+  </div>);
 }
 
-function Flute(): JSX.Element {
-
-  const [octave, setOctave] = useState(6);
-  const keys = List([
-    { note: 'C', idx: 0 },
-    { note: 'Db', idx: 0.5 },
-    { note: 'D', idx: 1 },
-    { note: 'Eb', idx: 1.5 },
-    { note: 'E', idx: 2 },
-    { note: 'F', idx: 3 },
-    { note: 'Gb', idx: 3.5 },
-    { note: 'G', idx: 4 },
-    { note: 'Ab', idx: 4.5 },
-    { note: 'A', idx: 5 },
-    { note: 'Bb', idx: 5.5 },
-    { note: 'B', idx: 6 },
-  ]);
-
-  return (
-    <div className='pv4'>
-      <div className='fl w-50 pa2'>
-        <img src={violin} alt='Violin' />
-      </div>
-      <div className='fl w-100 pa2' style={{marginLeft: '2rem'}}>
-        <label className="f6 b db mb2">
-          Current Octave: 
-          <select className="input-reset ba b--black-20 pa2 mb2 db w-10"value={octave} onChange={e => setOctave(parseInt(e.target.value))}>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-            <option value="7">7</option>
-          </select>
-        </label>
-      </div>
-      <div className='relative dib h4 w-100 ml4'>
-        {keys.map(key => {
-          const note = `${key.note}`;
-          return  (<FluteButton note={note} octave={octave}/>) 
-        })}
-      </div>
-      
-    </div>
-  );
-}
-
-export const FluteInstrument = new Instrument('Violin', Flute);
+export const ViolinInstrument = new Instrument('Violin', Violin);

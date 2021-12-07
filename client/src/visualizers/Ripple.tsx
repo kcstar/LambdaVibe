@@ -5,7 +5,7 @@ import * as Tone from 'tone';
 // project imports
 import { Visualizer } from '../Visualizers';
 
-let expansionFactor = 0;
+let expansionFactor = 50;
 let isTimeToExpand = false;
 
 export const RippleVisualizer = new Visualizer(
@@ -59,17 +59,17 @@ export const RippleVisualizer = new Visualizer(
     }
     p5.endShape();
 
-    if (expansionFactor === 0) {
-      isTimeToExpand = true;
-    }
-    if (expansionFactor === 50) {
-      isTimeToExpand = false;
-    }
+    // if (expansionFactor === 0) {
+    //   isTimeToExpand = true;
+    // }
+    // if (expansionFactor === 50) {
+    //   isTimeToExpand = false;
+    // }
 
-    if (isTimeToExpand) {
-      expansionFactor++;
-    } else {
-      expansionFactor--;
-    }
+    // if (isTimeToExpand) {
+    //   expansionFactor++;
+    // } else {
+    //   expansionFactor--;
+    // }
   },
 );
