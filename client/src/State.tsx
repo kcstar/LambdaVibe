@@ -3,9 +3,9 @@ import { List, Map } from 'immutable';
 
 // project dependencies
 import { PianoInstrument } from './instruments/Piano';
-import { ViolinInstrument } from './instruments/DankPiano';
+import { ViolinInstrument } from './instruments/kcstar';
 import { WaveformVisualizer } from './visualizers/Waveform';
-import { RippleVisualizer } from './visualizers/Ripple';
+import { RippleVisualizer } from './visualizers/kcstar';
 
 /** ------------------------------------------------------------------------ **
  * The entire application state is stored in AppState.
