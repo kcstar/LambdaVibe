@@ -7,7 +7,7 @@ PRAGMA foreign_keys;
 -- references by using a FOREIGN KEY into a rooms table with an 
 -- int primary key.
 CREATE TABLE songs (
-	id int NOT NULL PRIMARY KEY,
+	id integer PRIMARY KEY,
 	song_title text NOT NULL,
 	notes varchar NOT NULL
 );

@@ -2,6 +2,7 @@
 import * as Tone from 'tone';
 import Sketch from 'react-p5';
 import P5 from 'p5';
+
 import React, { useEffect, useMemo, useCallback } from 'react';
 
 type VisualizerDrawer = (p5: P5, analyzer: Tone.Analyser) => void;
@@ -22,11 +23,14 @@ export class Visualizer {
 
 export function VisualizerContainer({ visualizer }: VisualizerContainerProps) {
   const { name, draw } = visualizer;
-
+  
   const analyzer: Tone.Analyser = useMemo(
-    () => new Tone.Analyser('waveform', 256),
+    () => new Tone.Analyser('waveform', 512 ),
     [],
   );
+
+
+  
 
   const onResize = useCallback((p5: P5) => {
     const width = window.innerWidth;
@@ -46,7 +50,9 @@ export function VisualizerContainer({ visualizer }: VisualizerContainerProps) {
   const setup = (p5: P5, canvasParentRef: Element) => {
     const width = window.innerWidth;
     const height = window.innerHeight / 2;
+    
     p5.createCanvas(width, height).parent(canvasParentRef);
+
   };
 
   return (

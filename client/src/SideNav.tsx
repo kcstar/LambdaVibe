@@ -122,6 +122,21 @@ function Songs({ state, dispatch }: SideNavProps): JSX.Element {
   );
 }
 
+function AddSong({ state, dispatch }: SideNavProps): JSX.Element {
+  return (
+
+        <Link
+          to="/AddSong"
+          style={{textDecoration: 'none', color: 'black' }}
+        >
+          <Section title="Add a Song"></Section>
+        </Link>
+      
+
+    );
+  
+}
+
 export function SideNav({ state, dispatch }: SideNavProps): JSX.Element {
   return (
     <div className="absolute top-0 left-0 bottom-0 w5 z-1 shadow-1 bg-white flex flex-column">
@@ -132,6 +147,7 @@ export function SideNav({ state, dispatch }: SideNavProps): JSX.Element {
         <Instruments state={state} dispatch={dispatch} />
         <Visualizers state={state} dispatch={dispatch} />
         <Songs state={state} dispatch={dispatch} />
+        <AddSong state={state} dispatch={dispatch}/>
       </div>
     </div>
   );

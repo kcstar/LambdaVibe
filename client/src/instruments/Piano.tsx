@@ -2,11 +2,11 @@
 import * as Tone from 'tone';
 import classNames from 'classnames';
 import { List, Range } from 'immutable';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 // project imports
 import { Instrument, InstrumentProps } from '../Instruments';
-
+import { DispatchAction } from '../Reducer'
 /** ------------------------------------------------------------------------ **
  * Contains implementation of components for Piano.
  ** ------------------------------------------------------------------------ */
@@ -55,36 +55,36 @@ export function PianoKey({
 }
 
 // eslint-disable-next-line
-function PianoKeyWithoutJSX({
-  note,
-  synth,
-  minor,
-  index,
-}: PianoKeyProps): JSX.Element {
-  /**
-   * This React component for pedagogical purposes.
-   * See `PianoKey` for the React component with JSX (JavaScript XML).
-   */
-  return React.createElement(
-    'div',
-    {
-      onMouseDown: () => synth?.triggerAttack(`${note}`),
-      onMouseUp: () => synth?.triggerRelease('+0.25'),
-      className: classNames('ba pointer absolute dim', {
-        'bg-black black h3': minor,
-        'black bg-white h4': !minor,
-      }),
-      style: {
-        top: 0,
-        left: `${index * 2}rem`,
-        zIndex: minor ? 1 : 0,
-        width: minor ? '1.5rem' : '2rem',
-        marginLeft: minor ? '0.25rem' : 0,
-      },
-    },
-    [],
-  );
-}
+// function PianoKeyWithoutJSX({
+//   note,
+//   synth,
+//   minor,
+//   index,
+// }: PianoKeyProps): JSX.Element {
+//   /**
+//    * This React component for pedagogical purposes.
+//    * See `PianoKey` for the React component with JSX (JavaScript XML).
+//    */
+//   return React.createElement(
+//     'div',
+//     {
+//       onMouseDown: () => synth?.triggerAttack(`${note}`),
+//       onMouseUp: () => synth?.triggerRelease('+0.25'),
+//       className: classNames('ba pointer absolute dim', {
+//         'bg-black black h3': minor,
+//         'black bg-white h4': !minor,
+//       }),
+//       style: {
+//         top: 0,
+//         left: `${index * 2}rem`,
+//         zIndex: minor ? 1 : 0,
+//         width: minor ? '1.5rem' : '2rem',
+//         marginLeft: minor ? '0.25rem' : 0,
+//       },
+//     },
+//     [],
+//   );
+// }
 
 function PianoType({ title, onClick, active }: any): JSX.Element {
   return (
@@ -100,7 +100,7 @@ function PianoType({ title, onClick, active }: any): JSX.Element {
   );
 }
 
-function Piano({ synth, setSynth }: InstrumentProps): JSX.Element {
+function Piano({ synth, setSynth, state, dispatch }: InstrumentProps): JSX.Element {
   const keys = List([
     { note: 'C', idx: 0 },
     { note: 'Db', idx: 0.5 },
@@ -138,6 +138,36 @@ function Piano({ synth, setSynth }: InstrumentProps): JSX.Element {
     'amsawtooth',
     'amtriangle',
   ]) as List<OscillatorType>;
+
+  const notes = state.get('notes');
+
+  useEffect(() => {
+    if (notes && synth) {
+      let eachNote = notes.split(' ');
+      let noteObjs = eachNote.map((note: string, idx: number) => ({
+        idx,
+        time: `+${idx / 4}`,
+        note,
+        velocity: 1,
+      }));
+
+      new Tone.Part((time, value) => {
+        // the value is an object which contains both the note and the velocity
+        synth.triggerAttackRelease(value.note, '4n', time, value.velocity);
+        if (value.idx === eachNote.length - 1) {
+          dispatch(new DispatchAction('STOP_SONG'));
+        }
+      }, noteObjs).start(0);
+
+      Tone.Transport.start();
+
+      return () => {
+        Tone.Transport.cancel();
+      };
+    }
+
+    return () => {};
+  }, [notes, synth, dispatch]);
 
   return (
     <div className="pv4">
