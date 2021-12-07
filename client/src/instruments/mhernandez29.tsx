@@ -2,11 +2,12 @@
 import * as Tone from 'tone';
 import classNames from 'classnames';
 import { List, Range } from 'immutable';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 // project imports
 import { Instrument, InstrumentProps } from '../Instruments';
 import '../Xylophone.css'
+import { DispatchAction } from '../Reducer';
 
 /** ------------------------------------------------------------------------ **
  * Contains implementation of components for Xylophone
@@ -45,7 +46,7 @@ function XylophoneButton({ note, octave, index }: XylophoneButtonProps): JSX.Ele
   );
 }
 
-function Xylophone(): JSX.Element {
+function Xylophone({ synth, setSynth, state, dispatch }: InstrumentProps): JSX.Element {
   const [octave, setOctave] = useState(6);
   const keys = List([
     { note: 'C', idx: 0 },
@@ -59,6 +60,36 @@ function Xylophone(): JSX.Element {
     { note: 'Ab', idx: 4.5 },
     { note: 'A', idx: 5 },
   ]);
+
+  const notes = state.get('notes');
+
+  useEffect(() => {
+    if (notes && sampler) {
+      let eachNote = notes.split(' ');
+      let noteObjs = eachNote.map((note: string, idx: number) => ({
+        idx,
+        time: `+${idx / 4}`,
+        note,
+        velocity: 1,
+      }));
+
+      new Tone.Part((time, value) => {
+        // the value is an object which contains both the note and the velocity
+        sampler.triggerAttackRelease(value.note, '4n', time, value.velocity);
+        if (value.idx === eachNote.length - 1) {
+          dispatch(new DispatchAction('STOP_SONG'));
+        }
+      }, noteObjs).start(0);
+
+      Tone.Transport.start();
+
+      return () => {
+        Tone.Transport.cancel();
+      };
+    }
+
+    return () => {};
+  }, [notes, sampler, dispatch]);
   return (
     <div className='pv4'>
       <div className="xylophone">
