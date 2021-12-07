@@ -26,7 +26,6 @@ export const RadialWaveformVisualizer = new Visualizer(
     let values = analyzer.getValue();
 
 
-    // console.log(Tone.Frequency('C3').toFrequency());
     p5.beginShape();
     for (let i = 0; i < 360; i++) {
       const amplitude = values[i] as number;
@@ -34,10 +33,15 @@ export const RadialWaveformVisualizer = new Visualizer(
       const x = r * p5.cos(i);
       const y = r * p5.sin(i);
 
+   
       p5.vertex(x, y);
+    
+      p5.triangle(x, y, x-30, y-20, x+20, y+20)
+    
     }
     p5.endShape();
     
 
   },
 );
+
