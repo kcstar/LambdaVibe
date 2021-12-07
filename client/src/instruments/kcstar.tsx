@@ -2,10 +2,11 @@
 import * as Tone from 'tone';
 import classNames from 'classnames';
 import { List, Range } from 'immutable';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import violin from '../img/665px-Violin-with-bow.svg';
 // project imports
-import { Instrument } from '../Instruments';
+import { Instrument, InstrumentProps } from '../Instruments';
+import { DispatchAction } from '../Reducer';
 /** ------------------------------------------------------------------------ **
  * Contains implementation of components for Violin.
  ** ------------------------------------------------------------------------ */
@@ -25,7 +26,7 @@ const sampler = new Tone.Sampler({
   baseUrl: 'http://localhost:3000/samples/violin/',
 }).toDestination();
 
-function Violin(): JSX.Element {
+function Violin({state, dispatch }: InstrumentProps): JSX.Element {
   const [currVString, setCurrVString] = useState('1');
   const vString: any = {
     1: ['G3', 'Ab3', 'A3', 'Bb3', 'B3', 'Cb4', 'C4', 'Db4'],
@@ -33,6 +34,36 @@ function Violin(): JSX.Element {
     3: ['A5', 'Bb5', 'B5', 'Cb6', 'C6', 'Db6', 'D6', 'Eb6'],
     4: ['E6', 'Fb6', 'F6', 'Gb6', 'G6', 'Ab7', 'A7', 'Bb7'],
   };
+
+  const notes = state.get('notes');
+
+  useEffect(() => {
+    if (notes && sampler) {
+      let eachNote = notes.split(' ');
+      let noteObjs = eachNote.map((note: string, idx: number) => ({
+        idx,
+        time: `+${idx / 4}`,
+        note,
+        velocity: 1,
+      }));
+
+      new Tone.Part((time, value) => {
+        // the value is an object which contains both the note and the velocity
+        sampler.triggerAttackRelease(value.note, '4n', time, value.velocity);
+        if (value.idx === eachNote.length - 1) {
+          dispatch(new DispatchAction('STOP_SONG'));
+        }
+      }, noteObjs).start(0);
+
+      Tone.Transport.start();
+
+      return () => {
+        Tone.Transport.cancel();
+      };
+    }
+
+    return () => {};
+  }, [notes, sampler, dispatch]);
 
   function ViolinButton(): JSX.Element | null {
     if (
