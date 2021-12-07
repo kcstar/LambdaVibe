@@ -26,39 +26,61 @@ const sampler = new Tone.Sampler({
 }).toDestination();
 
 function Violin(): JSX.Element {
-  const [currVString, setCurrVString] = useState(1);
-  const vString = {
-    1: ['G', 'Ab', 'A', 'Bb', 'B', 'Cb', 'C', 'Db'],
-    2: ['D', 'Eb', 'E', 'Fb', 'F', 'Gb', 'G', 'Ab'],
-    3: ['A', 'Bb', 'B', 'Cb', 'C', 'Db', 'D', 'Eb'],
-    4: ['E', 'Fb', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb'],
-  }
+  const [currVString, setCurrVString] = useState('1');
+  const vString: any = {
+    1: ['G4', 'Ab4', 'A4', 'Bb4', 'B4', 'Cb4', 'C4', 'Db4'],
+    2: ['D4', 'Eb4', 'E4', 'Fb4', 'F4', 'Gb5', 'G4', 'Ab5'],
+    3: ['A5', 'Bb5', 'B5', 'Cb5', 'C5', 'Db5', 'D5', 'Eb5'],
+    4: ['E6', 'Fb6', 'F6', 'Gb6', 'G6', 'Ab6', 'A6', 'Bb6'],
+  };
 
-  function ViolinButton(): JSX.Element {
-    switch (currVString) {
-      case 1:
-        vString[1].map((note) => <a className="f6 link dim br3 ph3 pv2 mb2 dib white bg-purple" href="#0">{note}</a>)
-        break;
-      case 2:
-      case 3:
-      case 4:
+  function ViolinButton(): JSX.Element | null {
+    if (
+      currVString === '1' ||
+      currVString === '2' ||
+      currVString === '3' ||
+      currVString === '4'
+    ) {
+      return vString[currVString].map((note: any) => (
+        <div
+          className='f6 link dim br3 ph3 pv2 mb2 dib white bg-purple'
+          onClick={() => {
+            sampler.triggerAttackRelease(`${note}`, '4n');
+          }}>
+          {note}
+        </div>
+      ));
     }
+
+    return null;
   }
 
-  return (<div className = 'pp4'><div
-    className='fl w-10 pa2'>
-    <img src={violin} alt='Violin photo'/>
+  return (
+    <div className='pp4'>
+      <div className='fl w-10 pa2'>
+        <img src={violin} alt='Violin photo' />
+      </div>
+      <div className='fl w-10 pa2'>
+        <label>
+          Current String:{' '}
+          <input
+            value={currVString}
+            onChange={e => setCurrVString(e.target.value)}
+          />
+        </label>
+      </div>
+      <div className='relative dib h4 w-100 ml4'>
+        {/* {vString[currVString].map((note: any) => (
+          <a
+            className='f6 link dim br3 ph3 pv2 mb2 dib white bg-purple'
+            href='#0'>
+            {note}
+          </a>
+        ))} */}
+        <ViolinButton/>
+      </div>
     </div>
-    <div className='fl w-10 pa2'>
-      <label>
-        Current String: <input value={currVString} onChange={(e) => setCurrVString(parseInt(e.target.value))}/>
-      </label>
-    </div>
-    <div className='relative dib h4 w-100 ml4'>
-      {currVString === 1 ? vString[1].map((note) => <a className="f6 link dim br3 ph3 pv2 mb2 dib white bg-purple" href="#0">{note}</a>) : <div>Hello world</div>}
-    </div>
-    
-  </div>);
+  );
 }
 
 export const ViolinInstrument = new Instrument('Violin', Violin);
